@@ -122,10 +122,9 @@ languages = [
 ]
 
 useragents = [
-    ("Enigma2 - XStreamity Plugin", "XStreamity"),
-    ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36", "Chrome 124"),
-    ("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0", "Firefox 125"),
-    ("Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.6422.165 Mobile Safari/537.36", "Android")
+    ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36", "Chrome 145"),
+    ("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:147.0) Gecko/20100101 Firefox/147.0", "Firefox 147"),
+    ("Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Mobile Safari/537.36", "Android")
 ]
 
 
@@ -219,7 +218,7 @@ cfg.infobarpicons = ConfigYesNo(default=True)
 cfg.channelcovers = ConfigYesNo(default=True)
 cfg.infobarcovers = ConfigYesNo(default=True)
 cfg.boot = ConfigYesNo(default=False)
-cfg.useragent = ConfigSelection(default="Enigma2 - XStreamity Plugin", choices=useragents)
+cfg.useragent = ConfigSelection(default="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36", choices=useragents)
 cfg.vodcategoryorder = ConfigSelection(default=(_("Sort: Original")), choices=[(_("Sort: A-Z"), "A-Z"), (_("Sort: Z-A"), "Z-A"), (_("Sort: Original"), _("Original"))])
 cfg.vodstreamorder = ConfigSelection(default=(_("Sort: Original")), choices=[(_("Sort: A-Z"), "A-Z"), (_("Sort: Z-A"), "Z-A"), (_("Sort: Added"), _("Added")), (_("Sort: Year"), _("Year")), (_("Sort: Original"), _("Original"))])
 cfg.seriescategoryorder = ConfigSelection(default=(_("Sort: Original")), choices=[(_("Sort: A-Z"), "A-Z"), (_("Sort: Z-A"), "Z-A"), (_("Sort: Original"), _("Original"))])
@@ -318,8 +317,7 @@ for font, name in [
 # ------------------------------------------------------------------
 
 hdr = {
-    'User-Agent': str(cfg.useragent.value),
-    'Accept-Encoding': 'gzip, deflate'
+    'User-Agent': str(cfg.useragent.value)
 }
 
 

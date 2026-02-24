@@ -42,8 +42,7 @@ from . import checkinternet
 epgimporter = os.path.isdir("/usr/lib/enigma2/python/Plugins/Extensions/EPGImport")
 
 hdr = {
-    'User-Agent': str(cfg.useragent.value),
-    'Accept-Encoding': 'gzip, deflate'
+    'User-Agent': str(cfg.useragent.value)
 }
 
 

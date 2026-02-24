@@ -38,7 +38,6 @@ def dedupe_playlists(playlists):
 
 
 def process_files():
-
     playlist_file = cfg.playlist_file.value
     playlists_json = cfg.playlists_json.value
 
@@ -319,6 +318,8 @@ def process_files():
                     new_list.append(playlist)
                     break
 
+    for index, playlist in enumerate(new_list):
+        playlist["playlist_info"]["index"] = index  # Or index + 1 if you want to start from 1
     playlists_all = new_list
 
     # Write new x-playlists.json file

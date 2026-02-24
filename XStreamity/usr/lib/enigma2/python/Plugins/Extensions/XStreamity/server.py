@@ -31,8 +31,7 @@ from .xStaticText import StaticText
 
 
 hdr = {
-    'User-Agent': str(cfg.useragent.value),
-    'Accept-Encoding': 'gzip, deflate'
+    'User-Agent': str(cfg.useragent.value)
 }
 
 playlist_file = cfg.playlist_file.value

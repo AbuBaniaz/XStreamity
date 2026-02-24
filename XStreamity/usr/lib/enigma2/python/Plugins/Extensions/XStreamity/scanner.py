@@ -46,8 +46,7 @@ from .xStaticText import StaticText
 epgimporter = os.path.isdir("/usr/lib/enigma2/python/Plugins/Extensions/EPGImport")
 
 hdr = {
-    'User-Agent': str(cfg.useragent.value),
-    'Accept-Encoding': 'gzip, deflate'
+    'User-Agent': str(cfg.useragent.value)
 }
 
 scans_dir = os.path.join(dir_tmp, "scans")
@@ -296,7 +295,7 @@ class XStreamity_Scanner(Screen):
                     try:
                         response_text = r.text
                         response = json.loads(response_text)
-                    except json.JSONDecodeError:
+                    except ValueError:
                         return index, None
 
                 else:
