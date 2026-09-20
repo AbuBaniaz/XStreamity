@@ -138,18 +138,25 @@ cfg.interface = ConfigSelection(
 # Screen / skin selection
 # ------------------------------------------------------------------
 
-blackfolderhd = "/usr/lib/enigma2/python/Plugins/Extensions/XStreamity/skins/hd/xstreamity/Black"
-blackfolderfhd = "/usr/lib/enigma2/python/Plugins/Extensions/XStreamity/skins/fhd/xstreamity/Black"
-blackfolderuhd = "/usr/lib/enigma2/python/Plugins/Extensions/XStreamity/skins/uhd/xstreamity/Black"
+def _remove_legacy_black_folder(xstreamity_skin_dir):
+    """
+    Remove a legacy "Black" skin folder left over from an old rename, using
+    an exact-case check via os.listdir() rather than os.path.exists().
+    os.path.exists() resolves case-insensitively on some filesystems (e.g.
+    Windows/NTFS), so it can't reliably distinguish "Black" from the live
+    "black" skin folder. listdir() + a byte-for-byte name comparison can.
+    """
+    try:
+        entries = os.listdir(xstreamity_skin_dir)
+    except OSError:
+        return
+    if "Black" in entries:
+        shutil.rmtree(os.path.join(xstreamity_skin_dir, "Black"))
 
-if os.path.exists(blackfolderhd):
-    shutil.rmtree(blackfolderhd)
 
-if os.path.exists(blackfolderfhd):
-    shutil.rmtree(blackfolderfhd)
-
-if os.path.exists(blackfolderuhd):
-    shutil.rmtree(blackfolderuhd)
+_remove_legacy_black_folder("/usr/lib/enigma2/python/Plugins/Extensions/XStreamity/skins/hd/xstreamity")
+_remove_legacy_black_folder("/usr/lib/enigma2/python/Plugins/Extensions/XStreamity/skins/fhd/xstreamity")
+_remove_legacy_black_folder("/usr/lib/enigma2/python/Plugins/Extensions/XStreamity/skins/uhd/xstreamity")
 
 screenwidth = getDesktop(0).size()
 
