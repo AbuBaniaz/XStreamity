@@ -116,10 +116,9 @@ class XStreamity_StartMenu(Screen):
             "blue": self.resetData,
             "up": self.switchList,
             "down": self.switchList,
+            "cancel": self.quit,
+            "red": self.quit,
         }
-
-        if not cfg.boot.value:
-            actions.update({"red": self.quit, "cancel": self.quit})
 
         self["actions"] = ActionMap(["XStreamityActions"], actions, -2)
 
@@ -889,22 +888,34 @@ class XStreamity_StartMenu(Screen):
         if debugs:
             print("*** playOriginalChannel ***")
 
+        self["background"].setText("")
+
         if glob.currentPlayingServiceRefString:
             if glob.currentPlayingServiceRefString != glob.newPlayingServiceRefString:
                 try:
-                    self.session.nav.playService(eServiceReference(glob.currentPlayingServiceRefString))
-                except:
-                    pass
+                    self.session.nav.stopService()
+                    self.session.nav.playService(
+                        eServiceReference(glob.currentPlayingServiceRefString)
+                    )
+
+                    glob.newPlayingServiceRef = glob.currentPlayingServiceRef
+                    glob.newPlayingServiceRefString = (
+                        glob.currentPlayingServiceRefString
+                    )
+                except Exception as e:
+                    print(e)
+
             try:
                 if glob.original_aspect_ratio is not None:
-                    eAVSwitch.getInstance().setAspectRatio(glob.original_aspect_ratio)
+                    eAVSwitch.getInstance().setAspectRatio(
+                        glob.original_aspect_ratio
+                    )
             except Exception:
                 pass
-
         else:
             try:
                 self.session.nav.stopService()
-            except:
+            except Exception:
                 pass
 
         self["splash"].hide()
@@ -918,10 +929,13 @@ class XStreamity_StartMenu(Screen):
         self["background"].setText("")
         self.local_video_path = cfg.introvideoselection.value
         service = eServiceReference(4097, 0, self.local_video_path)
+
         try:
             self.session.nav.playService(service)
-        except:
-            pass
+            glob.newPlayingServiceRef = service
+            glob.newPlayingServiceRefString = service.toString()
+        except Exception as e:
+            print(e)
 
     def onEOF(self):
         if debugs:
