@@ -59,6 +59,7 @@ from . import _
 from . import xstreamity_globals as glob
 from .plugin import (cfg, common_path, dir_tmp, downloads_json, pythonVer, screenwidth, skin_directory, hasConcurrent, hasMultiprocessing, debugs, isDreambox)
 from .utils import clean_names
+from .downloads import fetch_json
 
 from .xStaticText import StaticText
 
@@ -640,54 +641,7 @@ class XStreamity_Series_Categories(Screen):
         self.process_downloads()
 
     def download_url(self, url):
-        if debugs:
-            print("*** download_url ***")
-
-        index = url[1]
-        response = None
-
-        retries = Retry(total=1, backoff_factor=1)
-        adapter = HTTPAdapter(max_retries=retries)
-
-        with requests.Session() as http:
-            http.mount("http://", adapter)
-            http.mount("https://", adapter)
-
-            try:
-                r = http.get(url[0], headers=hdr, timeout=(10, 20), verify=False)
-                r.raise_for_status()
-
-                # Get Content-Type from headers
-                content_type = r.headers.get('Content-Type', '')
-
-                # Handle JSON content directly
-                if 'application/json' in content_type:
-                    try:
-                        response = r.json()
-                    except ValueError as e:
-                        print("Error decoding JSON:", e, url)
-                        return index, None
-
-                # Handle text/html content
-                elif 'text/html' in content_type:
-                    try:
-                        # Attempt to parse the HTML body as JSON
-                        response_text = r.text
-                        response = json.loads(response_text)
-                    except ValueError as e:
-                        print("Error decoding JSON from HTML content:", e, url)
-                        return index, None
-
-                else:
-                    print("Final response is non-JSON content:", r.url)
-                    return index, None
-
-            except requests.exceptions.RequestException as e:
-                print("Request error:", e)
-            except Exception as e:
-                print("Unexpected error:", e)
-
-        return index, response
+        return fetch_json(url, hdr, debugs)
 
     def process_downloads(self):
         if debugs:
