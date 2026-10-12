@@ -14,27 +14,7 @@ except ImportError:
 
 # Local application/library-specific imports
 from .plugin import cfg
-
-
-def dedupe_playlists(playlists):
-    seen = set()
-    unique = []
-
-    for p in playlists:
-        pi = p.get("playlist_info", {})
-        key = (
-            str(pi.get("domain", "")).lower(),
-            str(pi.get("username", "")).strip(),
-            str(pi.get("password", "")).strip()
-        )
-
-        if key in seen:
-            continue
-
-        seen.add(key)
-        unique.append(p)
-
-    return unique
+from .utils import dedupe_playlists
 
 
 def normalise_playlist_value(value, lower=False):

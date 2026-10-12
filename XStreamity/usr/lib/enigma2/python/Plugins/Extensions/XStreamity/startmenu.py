@@ -33,7 +33,7 @@ from . import xstreamity_globals as glob
 from . import processfiles as loadfiles
 from .plugin import cfg, downloads_json, hasConcurrent, hasMultiprocessing, pythonFull, skin_directory, version, InternetSpeedTest_installed, NetSpeedTest_installed, debugs, pythonVer, dir_tmp
 from .xStaticText import StaticText
-from .utils import _cleanup_epg_folders, _get_current_aspect_ratio, clearCaches
+from .utils import _cleanup_epg_folders, clean_names, _get_current_aspect_ratio, clearCaches
 
 try:
     from enigma import eAVSwitch
@@ -43,27 +43,6 @@ except Exception:
 hdr = {
     'User-Agent': str(cfg.useragent.value),
 }
-
-
-if pythonVer == 3:
-    superscript_to_normal = str.maketrans(
-        '⁰¹²³⁴⁵⁶⁷⁸⁹ᵃᵇᶜᵈᵉᶠᵍʰⁱʲᵏˡᵐⁿᵒᵖʳˢᵗᵘᵛʷˣʸᶻ'
-        'ᴬᴮᴰᴱᴳᴴᴵᴶᴷᴸᴹᴺᴼᴾᴿᵀᵁⱽᵂ⁺⁻⁼⁽⁾',
-        '0123456789abcdefghijklmnoprstuvwxyz'
-        'ABDEGHIJKLMNOPRTUVW+-=()'
-    )
-
-
-def normalize_superscripts(text):
-    return text.translate(superscript_to_normal)
-
-
-def clean_names(streams):
-    for item in streams:
-        for field in ("name", "category_name"):
-            if field in item and isinstance(item[field], str):
-                item[field] = normalize_superscripts(item[field])
-    return streams
 
 
 class XStreamity_StartMenu(Screen):

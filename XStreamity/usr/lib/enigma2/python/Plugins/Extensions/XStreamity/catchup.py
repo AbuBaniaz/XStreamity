@@ -47,6 +47,7 @@ from enigma import eTimer, eServiceReference
 from . import _
 from . import xstreamity_globals as glob
 from .plugin import cfg, common_path, dir_tmp, downloads_json, pythonVer, screenwidth, skin_directory, hasConcurrent, hasMultiprocessing, isDreambox
+from .utils import clean_names
 from .xStaticText import StaticText
 
 
@@ -56,27 +57,6 @@ from .sslfactory import SNIFactory, sslverify
 hdr = {
     'User-Agent': str(cfg.useragent.value),
 }
-
-
-if pythonVer == 3:
-    superscript_to_normal = str.maketrans(
-        '⁰¹²³⁴⁵⁶⁷⁸⁹ᵃᵇᶜᵈᵉᶠᵍʰⁱʲᵏˡᵐⁿᵒᵖʳˢᵗᵘᵛʷˣʸᶻ'
-        'ᴬᴮᴰᴱᴳᴴᴵᴶᴷᴸᴹᴺᴼᴾᴿᵀᵁⱽᵂ⁺⁻⁼⁽⁾',
-        '0123456789abcdefghijklmnoprstuvwxyz'
-        'ABDEGHIJKLMNOPRTUVW+-=()'
-    )
-
-
-def normalize_superscripts(text):
-    return text.translate(superscript_to_normal)
-
-
-def clean_names(streams):
-    for item in streams:
-        for field in ("name", "category_name"):
-            if field in item and isinstance(item[field], str):
-                item[field] = normalize_superscripts(item[field])
-    return streams
 
 
 class XStreamity_Catchup_Categories(Screen):

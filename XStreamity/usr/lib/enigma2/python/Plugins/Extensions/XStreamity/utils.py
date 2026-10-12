@@ -148,3 +148,47 @@ def clearCaches():
             drop_caches.write("3\n")
     except (IOError, OSError):
         pass
+
+
+# Superscript characters (e.g. "ᴴᴰ") converted to plain text so names sort/search properly.
+# str.maketrans only exists on Python 3; callers already guard on Python 3.
+if hasattr(str, "maketrans"):
+    superscript_to_normal = str.maketrans(
+        '⁰¹²³⁴⁵⁶⁷⁸⁹ᵃᵇᶜᵈᵉᶠᵍʰⁱʲᵏˡᵐⁿᵒᵖʳˢᵗᵘᵛʷˣʸᶻ'
+        'ᴬᴮᴰᴱᴳᴴᴵᴶᴷᴸᴹᴺᴼᴾᴿᵀᵁⱽᵂ⁺⁻⁼⁽⁾',
+        '0123456789abcdefghijklmnoprstuvwxyz'
+        'ABDEGHIJKLMNOPRTUVW+-=()'
+    )
+
+
+def normalize_superscripts(text):
+    return text.translate(superscript_to_normal)
+
+
+def clean_names(streams):
+    for item in streams:
+        for field in ("name", "category_name"):
+            if field in item and isinstance(item[field], str):
+                item[field] = normalize_superscripts(item[field])
+    return streams
+
+
+def dedupe_playlists(playlists):
+    seen = set()
+    unique = []
+
+    for p in playlists:
+        pi = p.get("playlist_info", {})
+        key = (
+            str(pi.get("domain", "")).lower(),
+            str(pi.get("username", "")).strip(),
+            str(pi.get("password", "")).strip()
+        )
+
+        if key in seen:
+            continue
+
+        seen.add(key)
+        unique.append(p)
+
+    return unique

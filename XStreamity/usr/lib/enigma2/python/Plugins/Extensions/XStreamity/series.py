@@ -58,6 +58,7 @@ from enigma import ePicLoad, eServiceReference, eTimer
 from . import _
 from . import xstreamity_globals as glob
 from .plugin import (cfg, common_path, dir_tmp, downloads_json, pythonVer, screenwidth, skin_directory, hasConcurrent, hasMultiprocessing, debugs, isDreambox)
+from .utils import clean_names
 
 from .xStaticText import StaticText
 
@@ -66,27 +67,6 @@ hdr = {
 }
 
 Factory.noisy = False
-
-if pythonVer == 3:
-    superscript_to_normal = str.maketrans(
-        '⁰¹²³⁴⁵⁶⁷⁸⁹ᵃᵇᶜᵈᵉᶠᵍʰⁱʲᵏˡᵐⁿᵒᵖʳˢᵗᵘᵛʷˣʸᶻ'
-        'ᴬᴮᴰᴱᴳᴴᴵᴶᴷᴸᴹᴺᴼᴾᴿᵀᵁⱽᵂ⁺⁻⁼⁽⁾',
-        '0123456789abcdefghijklmnoprstuvwxyz'
-        'ABDEGHIJKLMNOPRTUVW+-=()'
-    )
-
-
-def normalize_superscripts(text):
-    return text.translate(superscript_to_normal)
-
-
-def clean_names(streams):
-    for item in streams:
-        for field in ("name", "category_name"):
-            if field in item and isinstance(item[field], str):
-                item[field] = normalize_superscripts(item[field])
-    return streams
-
 
 class XStreamity_Series_Categories(Screen):
     ALLOW_SUSPEND = True
